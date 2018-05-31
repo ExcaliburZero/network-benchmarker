@@ -38,13 +38,14 @@
           "axis": {"title": "Datetime"}
         },
         "y": {
-          "field": "mean_latency",
+          "field": "meanLatency",
           "type": "quantitative",
           "axis": {"title": "Mean Latency (ns)"}
         },
         "tooltip": [
           {"field": "datetime", "timeUnit": "yearmonthdatehoursminutes", "type": "temporal", "title": "Datetime"},
-          {"field": "mean_latency", "type": "quantitative", "title": "Mean Latency (ns)"},
+          {"field": "meanLatency", "type": "quantitative", "title": "Mean Latency (ns)"},
+          {"field": "stdLatency", "type": "quantitative", "title": "StdDev Latency (ns)"}
         ]
       },
       "config": {

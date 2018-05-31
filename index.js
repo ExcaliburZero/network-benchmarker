@@ -42,37 +42,54 @@ function timeRequest() {
     return difference;
 }
 
-function benchmarkMeanLatency() {
+function standardDeviation(values, mean) {
+    var std = 0.0;
+    for (const v of values) {
+        const diff = v - mean;
+
+        std += Math.pow(diff, 2.0);
+    }
+
+    std = Math.sqrt(std / values.length);
+
+    return std;
+}
+
+function benchmark() {
     // Ignore the first request
     timeRequest();
 
     var latencySum = 0.0;
+    const latencies = [];
     for (i = 0; i < MEASUREMENT_SAMPLES; i++) {
         const elapsed = timeRequest();
 
         // Divide by 2 to account for both way travel
         const latency = elapsed / 2.0;
 
+        latencies.push(latency);
         latencySum += latency;
     }
 
     const meanLatency = latencySum / MEASUREMENT_SAMPLES;
 
-    return meanLatency;
+    const stdLatency = standardDeviation(latencies, meanLatency);
+
+    return {
+        "meanLatency": meanLatency,
+        "stdLatency": stdLatency
+    };
 }
 
 function runAndLogBenchmark() {
     MongoClient.connect(DB_URL, function (err, db) {
         if (err) throw err;
 
-        const meanLatency = benchmarkMeanLatency();
+        const result = benchmark();
 
         const dbo = db.db(DB_NAME);
 
-        const result = {
-            datetime: getCurrentDatetime(),
-            mean_latency: meanLatency
-        };
+        result.datetime = getCurrentDatetime();
 
         dbo.collection(RESULTS_TABLE).insertOne(result, function(err, res) {
             if (err) throw err;
