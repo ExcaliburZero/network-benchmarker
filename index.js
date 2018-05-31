@@ -96,12 +96,20 @@ function getData(req,res) {
 
         const cursor = dbo.collection(RESULTS_TABLE).find();
 
+        var entries = [];
         cursor.each(function (err, doc) {
             if (err) throw err;
-            console.log(doc);
+
+            const receivedAllEntries = doc == null;
+            if (receivedAllEntries) {
+                res.send(entries);
+            } else {
+                console.log(doc);
+
+                entries.push(doc);
+            }
         });
 
-        res.send("Data");
         db.close();
     });
 }
