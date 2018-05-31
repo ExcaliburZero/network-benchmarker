@@ -1,0 +1,11 @@
+{
+  "name": "network-benchmarker",
+  "version": "1.0.0",
+  "description": "A webserver for benchmarking your network connection and visualizing the results",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christopher Wells",
+  "license": "MIT"
+}
