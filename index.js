@@ -10,11 +10,27 @@ const DB_URL = "mongodb://localhost/";
 
 const MongoClient = require("mongodb").MongoClient;
 
+function getCurrentDatetime() {
+    return new Date();
+}
+
 function start() {
     console.log("Running server on port: " + PORT);
 
     MongoClient.connect(DB_URL, function (err, db) {
+        if (err) throw err;
+
         const dbo = db.db(DB_NAME);
+
+        const result = {
+            datetime: getCurrentDatetime(),
+            mean_latency: 5.0
+        };
+
+        dbo.collection(RESULTS_TABLE).insertOne(result, function(err, res) {
+            if (err) throw err;
+            console.log("1 document inserted");
+        });
 
         console.log("Connected");
         db.close();
@@ -23,11 +39,14 @@ function start() {
 
 function getData(req,res) {
     MongoClient.connect(DB_URL, function(err, db) {
+        if (err) throw err;
+
         const dbo = db.db(DB_NAME);
 
         const cursor = dbo.collection(RESULTS_TABLE).find();
 
         cursor.each(function (err, doc) {
+            if (err) throw err;
             console.log(doc);
         });
 
