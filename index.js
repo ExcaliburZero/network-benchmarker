@@ -122,8 +122,6 @@ function getData(req, res) {
             if (receivedAllEntries) {
                 res.send(entries);
             } else {
-                console.log(doc);
-
                 entries.push(doc);
             }
         });
