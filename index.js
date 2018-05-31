@@ -4,6 +4,7 @@ const request = require("request-promise");
 const app = express();
 
 const PORT = 5023;
+const PUBLIC_DIR = "public";
 
 const DB_NAME = "NetworkBenchmarker";
 const RESULTS_TABLE = "Results";
@@ -114,6 +115,7 @@ function getData(req,res) {
     });
 }
 
-app.get("/", (req,res) => res.send("Hello, World!"));
+app.use(express.static(PUBLIC_DIR));
+
 app.get("/data", getData);
 app.listen(PORT, start);

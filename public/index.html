@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Benchmark Report</title>
+
+  <style>
+    .vega-actions a {
+        margin-right: 12px;
+        color: #757575;
+        font-weight: normal;
+        font-size: 13px;
+    }
+    .error {
+        color: red;
+    }
+  </style>
+
+  <script src="https://cdn.jsdelivr.net/npm/vega@3.3.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@2.4.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3.9.0"></script>
+
+</head>
+<body>
+  <div id="vis"></div>
+  <script type="text/javascript">
+    var spec = {
+      "width": 700,
+      "data": {
+        "url": "data"
+      },
+      "title": "Benchmark Report",
+      "mark": "point",
+      "encoding": {
+        "x": {
+          "field": "datetime",
+          "type": "temporal",
+          "scale": {},
+          "axis": {"title": "Datetime"}
+        },
+        "y": {
+          "field": "mean_latency",
+          "type": "quantitative",
+          "axis": {"title": "Mean Latency (ns)"}
+        },
+        "tooltip": [
+          {"field": "datetime", "timeUnit": "yearmonthdatehoursminutes", "type": "temporal", "title": "Datetime"},
+          {"field": "mean_latency", "type": "quantitative", "title": "Mean Latency (ns)"},
+        ]
+      },
+      "config": {
+        "overlay": {
+          "line": true
+        },
+        "scale": {
+          "useUnaggregatedDomain": true
+        }
+      }
+    }
+    var embed_opt = {"mode": "vega-lite"};
+
+    function showError(el, error){
+        el.innerHTML = ('<div class="error">'
+                        + '<p>JavaScript Error: ' + error.message + '</p>'
+                        + "<p>This usually means there's a typo in your chart specification. "
+                        + "See the javascript console for the full traceback.</p>"
+                        + '</div>');
+        throw error;
+    }
+    const el = document.getElementById('vis');
+    vegaEmbed("#vis", spec, embed_opt)
+      .catch(error => showError(el, error));
+  </script>
+</body>
+</html>
