@@ -89,7 +89,7 @@ function start() {
     setInterval(runAndLogBenchmark, REQUEST_INTERVAL);
 }
 
-function getData(req,res) {
+function getData(req, res) {
     MongoClient.connect(DB_URL, function(err, db) {
         if (err) throw err;
 
@@ -115,7 +115,21 @@ function getData(req,res) {
     });
 }
 
+function clearData(req, res) {
+    MongoClient.connect(DB_URL, function(err, db) {
+        if (err) throw err;
+
+        const dbo = db.db(DB_NAME);
+
+        const cursor = dbo.collection(RESULTS_TABLE).deleteMany();
+
+        db.close();
+        res.send("Data cleared");
+    });
+}
+
 app.use(express.static(PUBLIC_DIR));
 
 app.get("/data", getData);
+app.get("/clear_data", clearData);
 app.listen(PORT, start);
