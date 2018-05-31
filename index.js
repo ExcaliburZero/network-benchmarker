@@ -13,8 +13,8 @@ const DB_URL = "mongodb://localhost/";
 const MongoClient = require("mongodb").MongoClient;
 
 const REQUEST_URL = "http://www.google.com";
-
-const NUM_REQUESTS = 10;
+const MEASUREMENT_SAMPLES = 10;
+const REQUEST_INTERVAL = 60000; // 1 minute (in ms)
 
 async function sendRequest() {
     await request.get(REQUEST_URL);
@@ -46,7 +46,7 @@ function benchmarkMeanLatency() {
     timeRequest();
 
     var latencySum = 0.0;
-    for (i = 0; i < NUM_REQUESTS; i++) {
+    for (i = 0; i < MEASUREMENT_SAMPLES; i++) {
         const elapsed = timeRequest();
 
         // Divide by 2 to account for both way travel
@@ -55,14 +55,12 @@ function benchmarkMeanLatency() {
         latencySum += latency;
     }
 
-    const meanLatency = latencySum / NUM_REQUESTS;
+    const meanLatency = latencySum / MEASUREMENT_SAMPLES;
 
     return meanLatency;
 }
 
-function start() {
-    console.log("Running server on port: " + PORT);
-
+function runAndLogBenchmark() {
     MongoClient.connect(DB_URL, function (err, db) {
         if (err) throw err;
 
@@ -77,12 +75,17 @@ function start() {
 
         dbo.collection(RESULTS_TABLE).insertOne(result, function(err, res) {
             if (err) throw err;
-            console.log("1 document inserted");
+            console.log(result);
         });
 
-        console.log("Connected");
         db.close();
     });
+}
+
+function start() {
+    console.log("Running server on port: " + PORT);
+
+    setInterval(runAndLogBenchmark, REQUEST_INTERVAL);
 }
 
 function getData(req,res) {
