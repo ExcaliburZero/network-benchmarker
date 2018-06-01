@@ -3,6 +3,8 @@ const request = require("request-promise");
 const REQUEST_URL = "http://www.google.com";
 const MEASUREMENT_SAMPLES = 10;
 
+const STDDEV_FILTER_RATIO = 2.0; // Allow <= ratio * std deviation from mean
+
 async function sendRequest() {
     await request.get(REQUEST_URL);
 
@@ -24,6 +26,15 @@ function timeRequest() {
     return difference;
 }
 
+function mean(values) {
+    var sum = 0.0;
+    for (const v of values) {
+        sum += v;
+    }
+
+    return sum / values.length;
+}
+
 function standardDeviation(values, mean) {
     var std = 0.0;
     for (const v of values) {
@@ -35,6 +46,20 @@ function standardDeviation(values, mean) {
     std = Math.sqrt(std / values.length);
 
     return std;
+}
+
+function filterByStdFromMean(values, mean, std, filterRatio) {
+    const allowedDeviation = std * filterRatio;
+
+    const filteredValues = [];
+    for (const v of values) {
+        const diffFromMean = Math.abs(v - mean);
+        if (diffFromMean <= allowedDeviation) {
+            filteredValues.push(v);
+        }
+    }
+
+    return filteredValues;
 }
 
 function benchmark() {
@@ -53,13 +78,22 @@ function benchmark() {
         latencySum += latency;
     }
 
-    const meanLatency = latencySum / MEASUREMENT_SAMPLES;
-
+    const meanLatency = mean(latencies);
     const stdLatency = standardDeviation(latencies, meanLatency);
 
+    const filteredLatencies = filterByStdFromMean(latencies, meanLatency, stdLatency, STDDEV_FILTER_RATIO);
+
+    const meanLatencyAfter = mean(filteredLatencies);
+    const stdLatencyAfter = standardDeviation(filteredLatencies, meanLatencyAfter);
+
+    const numDroppedPoints = latencies.length - filteredLatencies.length;
+
     return {
-        "meanLatency": meanLatency,
-        "stdLatency": stdLatency
+        "meanLatencyBefore": meanLatency,
+        "stdLatencyBefore": stdLatency,
+        "meanLatencyAfter": meanLatencyAfter,
+        "stdLatencyAfter": stdLatencyAfter,
+        "numDroppedPoints": numDroppedPoints
     };
 }
 

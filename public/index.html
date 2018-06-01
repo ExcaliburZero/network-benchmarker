@@ -25,6 +25,7 @@
   <script type="text/javascript">
     var spec = {
       "width": 700,
+      "height": 500,
       "data": {
         "url": "data"
       },
@@ -38,14 +39,19 @@
           "axis": {"title": "Datetime"}
         },
         "y": {
-          "field": "meanLatency",
+          "field": "meanLatencyAfter",
           "type": "quantitative",
           "axis": {"title": "Mean Latency (ns)"}
         },
+        "size": {
+          "field": "stdLatencyAfter",
+          "type": "quantitative"
+        },
         "tooltip": [
           {"field": "datetime", "timeUnit": "yearmonthdatehoursminutes", "type": "temporal", "title": "Datetime"},
-          {"field": "meanLatency", "type": "quantitative", "title": "Mean Latency (ns)"},
-          {"field": "stdLatency", "type": "quantitative", "title": "StdDev Latency (ns)"}
+          {"field": "meanLatencyAfter", "type": "quantitative", "title": "Mean Latency (ns)"},
+          {"field": "stdLatencyAfter", "type": "quantitative", "title": "StdDev Latency (ns)"},
+          {"field": "numDroppedPoints", "type": "quantitative", "title": "Num of Dropped Measurements"}
         ]
       },
       "config": {

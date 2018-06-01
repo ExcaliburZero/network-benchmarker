@@ -55,12 +55,11 @@ function getData(req, res) {
             const receivedAllEntries = doc == null;
             if (receivedAllEntries) {
                 res.send(entries);
+                db.close();
             } else {
                 entries.push(doc);
             }
         });
-
-        db.close();
     });
 }
 
@@ -70,7 +69,7 @@ function clearData(req, res) {
 
         const dbo = db.db(DB_NAME);
 
-        const cursor = dbo.collection(RESULTS_TABLE).deleteMany();
+        dbo.collection(RESULTS_TABLE).deleteMany();
 
         db.close();
         res.send("Data cleared");
