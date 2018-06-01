@@ -18,19 +18,41 @@ async function sendRequest() {
 }
 
 /**
- * Returns the current time in nanoseconds. This is used to calculate the
- * amount of time that a web request takes.
+ * Returns the current time in a list of seconds and nanoseconds. This is used
+ * to calculate the amount of time that a web request takes.
  *
  * It is important to have accuracy in the range of nanoseconds, as opposed to
  * miliseconds, in order to get a good measure of the web request durations,
  * which can be quite small.
  *
+ * Note that this function is non-deterministic and performs IO.
+ *
  * @example
- * getTimeNano()
- * // 80661361
+ * getTime()
+ * // [ 7628, 369713115 ]
  */
-function getTimeNano() {
-    return process.hrtime()[1];
+function getTime() {
+    return process.hrtime();
+}
+
+/**
+ * Returns the difference in time (in nanoseconds) between the given time and
+ * the current time.
+ *
+ * This is used for determining how long a web request takes.
+ *
+ * @example
+ * getTimeDifference([7982, 10950941])
+ * // 642933201
+ */
+function getTimeDifference(prevTime) {
+    const timeDifference = process.hrtime(prevTime);
+
+    // Convert the seconds to nanoseconds and add them to the nanoseconds.
+    // For this use case there should generally never be any seconds, though.
+    const differenceInNano = timeDifference[0] * 1000000 + timeDifference[1];
+
+    return differenceInNano;
 }
 
 /**
@@ -45,12 +67,11 @@ function getTimeNano() {
  * // 13330469
  */
 function timeRequest() {
-    const before = getTimeNano();
+    const before = getTime();
 
     const sucessful = sendRequest();
 
-    const after = getTimeNano();
-    const difference = after - before;
+    const difference = getTimeDifference(before);
 
     return difference;
 }
