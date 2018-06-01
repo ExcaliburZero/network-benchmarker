@@ -2,6 +2,10 @@
  * Returns the mean of the given list of numerical values.
  *
  * Does not mutate the given list.
+ *
+ * @example
+ * mean([1.0, 2.5, 3.0, 4.0])
+ * // 2.625
  */
 function mean(values) {
     var sum = 0.0;
@@ -17,6 +21,10 @@ function mean(values) {
  * the given mean value of the list.
  *
  * Does not mutate the given list.
+ *
+ * @example
+ * standardDeviation([1.0, 2.5, 3.0, 4.0], 2.625)
+ * // 1.0825317547305484
  */
 function standardDeviation(values, mean) {
     var std = 0.0;
