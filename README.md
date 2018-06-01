@@ -9,5 +9,5 @@ To run Network Benchmarker, run the following commands in the main directory of 
 $ sudo service mongod start
 
 # Start Network Benchmarker
-$ node index.js
+$ npm start
 ```
