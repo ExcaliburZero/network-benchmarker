@@ -48,6 +48,10 @@ function standardDeviation(values, mean) {
  *
  * Does not mutate the given list, and instead returns a new list that is a
  * subset of the given list. 
+ *
+ * @example
+ * filterByStdFromMean([1.0, 2.0, 3.0, 4.0, 5.0], 3, 1.4142135623730951, 1.0)
+ * // [2.0, 3.0, 4.0]
  */
 function filterByStdFromMean(values, mean, std, filterRatio) {
     const allowedDeviation = std * filterRatio;
