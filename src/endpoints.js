@@ -9,7 +9,7 @@ const DB_URL = "mongodb://localhost/";
 
 const MongoClient = require("mongodb").MongoClient;
 
-const REQUEST_INTERVAL = 60000; // 1 minute (in ms)
+const BENCHMARK_INTERVAL = 60000; // 1 minute (in ms)
 
 /**
  * Returns the current datetime as a Date object. This is used to keep track of
@@ -52,7 +52,7 @@ function runAndLogBenchmark() {
 function start() {
     console.log("Running server on port: " + PORT);
 
-    setInterval(runAndLogBenchmark, REQUEST_INTERVAL);
+    setInterval(runAndLogBenchmark, BENCHMARK_INTERVAL);
 }
 
 /**

@@ -4,7 +4,7 @@
   "description": "A webserver for benchmarking your network connection and visualizing the results",
   "main": "index.js",
   "scripts": {
-    "start" : "node index.js",
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Christopher Wells",
@@ -14,5 +14,8 @@
     "mongodb": "^3.1.0-beta4",
     "request": "^2.87.0",
     "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "jsdoc": "^3.5.5"
   }
 }
