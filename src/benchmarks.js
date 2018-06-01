@@ -62,22 +62,7 @@ function filterByStdFromMean(values, mean, std, filterRatio) {
     return filteredValues;
 }
 
-function benchmark() {
-    // Ignore the first request
-    timeRequest();
-
-    var latencySum = 0.0;
-    const latencies = [];
-    for (i = 0; i < MEASUREMENT_SAMPLES; i++) {
-        const elapsed = timeRequest();
-
-        // Divide by 2 to account for both way travel
-        const latency = elapsed / 2.0;
-
-        latencies.push(latency);
-        latencySum += latency;
-    }
-
+function calculateStatistics(latencies) {
     const meanLatency = mean(latencies);
     const stdLatency = standardDeviation(latencies, meanLatency);
 
@@ -95,6 +80,25 @@ function benchmark() {
         "stdLatencyAfter": stdLatencyAfter,
         "numDroppedPoints": numDroppedPoints
     };
+}
+
+function benchmark() {
+    // Ignore the first request
+    timeRequest();
+
+    var latencySum = 0.0;
+    const latencies = [];
+    for (i = 0; i < MEASUREMENT_SAMPLES; i++) {
+        const elapsed = timeRequest();
+
+        // Divide by 2 to account for both way travel
+        const latency = elapsed / 2.0;
+
+        latencies.push(latency);
+        latencySum += latency;
+    }
+
+    return calculateStatistics(latencies);
 }
 
 exports.benchmark = benchmark;
